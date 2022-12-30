@@ -6,6 +6,10 @@ class UserDataAccessLayer extends DataAccessLayer {
         this.model = model
         this.markup = !!markup
     }
+
+    async getUserByEmail(email) {
+        return await this.model.findOne({ email })
+    }
 }
 
 module.exports = UserDataAccessLayer

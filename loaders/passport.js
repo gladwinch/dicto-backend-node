@@ -1,7 +1,7 @@
 const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const { userModel } = require('../modules/user')
+const { userDAL } = require('../modules/user')
 
 module.exports = (app) => {
 
@@ -25,25 +25,28 @@ module.exports = (app) => {
 
     passport.use(new LocalStrategy(
         async function(email, password, done) {
-            userModel.findOne({ email }, function (err, user) {
-                if (err) { return done(err); }
-                if (!user) { return done(null, false) }
+            try {
+                const user = await userDAL.getUserByEmail(email)
+                if(!user) { return done(null, false) }
                 if (!user.matchPassword(password)) { 
                     return done(null, false) 
                 }
 
                 return done(null, user)
-            })
+            } catch (err) {
+                if(err) done(err)
+            }
         }
     ))
       
     // Serialize and deserialize user instances to and from the session
     passport.serializeUser(function(user, done) {
-        done(null, user.id)
+        console.log('user', user)
+        done(null, user._id)
     })
       
     passport.deserializeUser(function(id, done) {
-        userModel.findById(id, function (err, user) {
+        userDAL.getById(id, function (err, user) {
             done(err, user)
         })
     })

@@ -1,5 +1,5 @@
 const UserDataAccessLayer = require('./user.dal')
-const userModel = require('./user.model')
+const UserModel = require('./user.model')
 const UserService = require('./user.service')
 const validationSchema = require('./user.validation')
 
@@ -11,6 +11,5 @@ const userDAL = new UserDataAccessLayer({
 module.exports = { 
     userDAL,
     userService: UserService({ userDAL }),
-    validationSchema,
-    userModel
+    validationSchema
 }
