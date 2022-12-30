@@ -1,6 +1,4 @@
 const create = userDAL => async (payload) => {
-    console.log('userDAL: ', userDAL)
-    console.log('payload: ', payload)
     return await userDAL.create(payload)
 }
 
