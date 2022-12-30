@@ -1,14 +1,26 @@
 const express = require('express')
 const router = express.Router()
-const { UserService } = require('./index.js')
+const { userService } = require('./index.js')
 
 // create user
 router.post('/', async(req, res, next) => {
     try {
         const _b = req.body
         // :TODO validation
-        let userData = await UserService.create(_b)
+        let userData = await userService.create(_b)
 
+        res.json(userData)
+    } catch (error) {
+        console.log('ERROR: ', error)
+    }
+})
+
+// login user
+router.post('/login', async(req, res, next) => {
+    try {
+        const _b = req.query
+        // console.log('the query: ', _b)
+        let userData = await userService.read()
         res.json(userData)
     } catch (error) {
         console.log('ERROR: ', error)
@@ -19,32 +31,12 @@ router.post('/', async(req, res, next) => {
 router.get('/', async(req, res, next) => {
     try {
         const _b = req.query
-        console.log('the query: ', _b)
-        let userData = await UserService.read(_b)
+        // console.log('the query: ', _b)
+        let userData = await userService.getUser(_b._id)
         res.json(userData)
     } catch (error) {
         console.log('ERROR: ', error)
     }
 })
-
-// router.get('/google', async(req, res, next) => {
-//     try {
-//         const _b = req.query
-//         console.log('the query: ', _b)
-        
-//         res.json({ success: true, query: _b })
-//     } catch (error) {
-//         console.log('ERROR: ', error)
-//     }
-// })
-
-// router.get('/login', async(req, res, next) => {
-//     let data = await AdminService.analytics()
-//     console.log('the data: ', data)
-//     res.send(data)
-// })
-
-// router.get('/logout', adminController.logout)
-// router.get('/', adminController.getUser)
 
 module.exports = router

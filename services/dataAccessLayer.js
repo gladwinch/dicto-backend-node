@@ -1,21 +1,25 @@
 // data access layer
 class DataAccessLayer {
-    async create(payload) {
+    async create(payload={}) {
         return await this.model.create(payload)
     }
 
-    async updateById(id, payload) {
+    async updateById(id, payload={}) {
         return await this.model.findOneAndUpdate({ _id: id }, payload, {
             upsert: true,
             new: true
         })
     }
 
-    async updateMany({ query, payload }) {
+    async updateMany({ query={}, payload={} }) {
         return await this.model.updateMany(query, payload)
     }
 
-    async read(_query) {
+    async getById(id) {
+        return await this.model.findById(id)
+    }
+
+    async read(_query={}) {
         let query
 
         const reqQuery = { ..._query }

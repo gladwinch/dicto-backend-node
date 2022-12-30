@@ -1,7 +1,6 @@
 const express = require('express')
 const loaders = require('./loaders')
 
-
 // app configuration
 let app = express()
 
@@ -9,7 +8,10 @@ let app = express()
 loaders(app)
 
 // Routers
-app.use(require("./config/path").include(express.Router()))
+app.use(
+    '/api',
+    require("./config/path").include(express.Router())
+)
 
 const server = app.listen(
     process.env.PORT,

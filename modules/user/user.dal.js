@@ -1,4 +1,4 @@
-const DataAccessLayer = require('../../utils/dataAccessLayer')
+const DataAccessLayer = require('../../services/dataAccessLayer')
 
 class UserDataAccessLayer extends DataAccessLayer {
     constructor({ model, markup }) {
