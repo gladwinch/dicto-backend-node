@@ -44,6 +44,24 @@ router.get('/', auth, async(req, res, next) => {
     }
 })
 
+router.get('/logout', (req, res) => {
+    req.logout(function(err) {
+        if (err) {
+          console.log(err)
+          res.send('Error logging out')
+        } else {
+            req.session.destroy(function(err) {
+                if (err) {
+                    console.log(err)
+                    res.send('session is not destroyed!')
+                } else {
+                    res.send('successful')
+                }
+            });
+        }
+    })
+})
+
 router.get('/sessions', (req, res) => {
     req.sessionStore.all((err, sessions)=>{
         res.json(sessions)

@@ -22,4 +22,6 @@ module.exports = {
     'GET_/': {},
 
     'GET_/sessions': {},
+
+    'GET_/logout': {}
 }
