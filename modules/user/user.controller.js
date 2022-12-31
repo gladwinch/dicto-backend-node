@@ -56,7 +56,7 @@ router.get('/logout', (req, res) => {
                     res.send('session is not destroyed!')
                 } else {
                     req.session = null
-                    res.send('successful')
+                    res.send('successfull')
                 }
             });
         }

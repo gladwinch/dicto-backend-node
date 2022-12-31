@@ -10,7 +10,7 @@ function validationMiddleware(schemaPath) {
         if(!schema) {
             return res.status(500).json({ 
                 success: false, 
-                errors: "Please add validation schema" 
+                errors: "Please add validation api schema" 
             })
         }
 
