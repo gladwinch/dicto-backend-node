@@ -7,8 +7,8 @@ const auth = require('../../middleware/auth')
 // create user
 router.post('/', async(req, res, next) => {
     try {
-        const data = await userService.create(req.body)
-        res.json({ success: true, data })
+        const user = await userService.create(req.body)
+        res.json({ success: true, data: user })
     } catch (error) {
         console.log('ERROR: ', error)
     }
@@ -27,7 +27,7 @@ router.post('/login', function(req, res, next) {
 
         req.logIn(user, function(err) {
             if (err) { return next(err); }
-            return res.json({ success: true, data: user });
+            return res.json({ success: true, data: user })
         })
     })(req, res, next)
 })
@@ -55,6 +55,7 @@ router.get('/logout', (req, res) => {
                     console.log(err)
                     res.send('session is not destroyed!')
                 } else {
+                    req.session = null
                     res.send('successful')
                 }
             });

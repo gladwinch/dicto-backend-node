@@ -19,7 +19,7 @@ const localAuthUser = async (email, password, done) => {
     }
 }
 
-module.exports = (app) => {
+module.exports = app => {
     // Use express-session middleware to store user sessions
     app.use(session({
         store: new RedisStore({ client: redis }),
