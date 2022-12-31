@@ -13,8 +13,6 @@ const localAuthUser = async (email, password, done) => {
             return done(null, false) 
         }
 
-        console.log('user from localauthuser: ', user)
-
         return done(null, user)
     } catch (err) {
         if(err) done(err)
@@ -44,8 +42,8 @@ module.exports = (app) => {
             usernameField: 'email',
             passwordField: 'password'
         },
-        localAuthUser)
-    )
+        localAuthUser
+    ))
       
     // Serialize and deserialize user instances to and from the session
     passport.serializeUser(function(user, done) {
