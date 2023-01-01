@@ -6,7 +6,7 @@ let app = express()
 
 //app config
 loaders(app)
-
+app.use(express.static('public'))
 // Routers
 app.use(
     '/api',
