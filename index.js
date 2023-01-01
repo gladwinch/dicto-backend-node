@@ -13,6 +13,10 @@ app.use(
     require("./config/path").include(express.Router())
 )
 
+app.get('/ping', (req, res) => {
+    res.send('pong')
+})
+
 const server = app.listen(
     process.env.PORT,
     console.log(
