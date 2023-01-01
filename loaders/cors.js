@@ -12,7 +12,8 @@ module.exports = app => {
                 // "http://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT,
                 // "https://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT
                 'http://localhost:3000',
-                'https://localhost:3000'
+                'https://localhost:3000',
+                'https://dicto-dev.onrender.com'
             ]
         })
     )
