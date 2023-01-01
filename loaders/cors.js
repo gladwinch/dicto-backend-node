@@ -10,7 +10,8 @@ module.exports = app => {
             credentials: true,
             origin: [
                 "http://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT,
-                "https://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT
+                "https://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT,
+                "https://fa37-49-37-113-228.in.ngrok.io"
             ]
         })
     )

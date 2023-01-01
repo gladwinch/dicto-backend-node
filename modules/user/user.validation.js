@@ -23,5 +23,7 @@ module.exports = {
 
     'GET_/sessions': {},
 
-    'GET_/logout': {}
+    'GET_/logout': {},
+
+    'GET_/token': {}
 }

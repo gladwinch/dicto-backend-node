@@ -69,4 +69,11 @@ router.get('/sessions', (req, res) => {
     })
 })
 
+router.get('/token', (req, res) => {
+    console.log('***********************************')
+    console.log("TOKEN: ".red, req.query.token)
+    console.log('------------------------------')
+    res.json({ success: true })
+})
+
 module.exports = router
