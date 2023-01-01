@@ -17,8 +17,12 @@ router.post('/', async(req, res, next) => {
 // login user
 router.post('/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
-        if (err) { return next(err); }
+        if (err) { 
+            console.log('passport.authenticate() error')
+            return next(err)
+         }
         if (!user) {
+            console.log('user not found 25')
             res.status(400).json({ 
                 success: false, 
                 errors: ['password or email incorrect']
@@ -26,7 +30,10 @@ router.post('/login', function(req, res, next) {
         }
 
         req.logIn(user, function(err) {
-            if (err) { return next(err); }
+            if (err) {
+                console.log('req.logIn err')
+                return next(err)
+            }
             return res.json({ success: true, data: user })
         })
     })(req, res, next)

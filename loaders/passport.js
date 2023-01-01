@@ -8,14 +8,19 @@ const { userDAL } = require('../modules/user')
 const localAuthUser = async (email, password, done) => {
     try {
         const user = await userDAL.getUserByEmail(email)
-        if(!user) { return done(null, false) }
+        if(!user) {
+            console.log('user not found!! localAuthUser')
+            return done(null, false)
+        }
         if (!user.matchPassword(password)) { 
+            console.log('password do not matcg')
             return done(null, false) 
         }
 
         return done(null, user)
     } catch (err) {
-        if(err) done(err)
+        console.log('localAuthUser catch error')
+        done(err)
     }
 }
 
@@ -47,13 +52,19 @@ module.exports = app => {
       
     // Serialize and deserialize user instances to and from the session
     passport.serializeUser(function(user, done) {
-        if(!user) return done('user not found')
+        if(!user)  {
+            console.log('ERR: serializeUser')
+            return done('user not found')
+        }
         done(null, user._id)
     })
       
     passport.deserializeUser(function(id, done) {
         userDAL.getById(id)
         .then(userData => done(null, userData))
-        .catch(err => console.error(err))
+        .catch(err => {
+            console.log('ERR: deserializeUser catch')
+            console.error(err)
+        })
     })
 }
