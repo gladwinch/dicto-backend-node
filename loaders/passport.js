@@ -2,7 +2,7 @@ const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 // const RedisStore = require('connect-redis')(session)
-const redis = require('../services/redis')
+// const redis = require('../services/redis')
 const { userDAL } = require('../modules/user')
 
 const localAuthUser = async (email, password, done) => {
