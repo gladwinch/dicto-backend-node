@@ -5,14 +5,21 @@ const WEB_SERVER_HOST = process.env.WEB_SERVER_HOST || "localhost"
 const WEB_SERVER_PORT = process.env.WEB_SERVER_PORT || 3000
 
 module.exports = app => {
-    app.use(
-        cors({
-            credentials: true,
-            origin: [
-                "http://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT,
-                "https://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT,
-                "https://fa37-49-37-113-228.in.ngrok.io"
-            ]
-        })
-    )
+    // app.use(
+    //     cors({
+    //         credentials: true,
+    //         origin: [
+    //             "http://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT,
+    //             "https://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT
+    //         ]
+    //     })
+    // )
+
+    // app.use(cors())
+
+    app.all('/*', function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        next();
+      })
 }
