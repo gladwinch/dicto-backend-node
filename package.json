@@ -1,5 +1,5 @@
 {
-  "name": "dicto-backend",
+  "name": "dicto-backend-node",
   "version": "1.0.0",
   "description": "dicto backend api",
   "main": "index.js",
