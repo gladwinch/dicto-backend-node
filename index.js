@@ -20,7 +20,7 @@ app.get('/ping', (req, res) => {
 const server = app.listen(
     process.env.PORT,
     console.log(
-        `Server running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}`.yellow.bold
+        `Server running in ${process.env.NODE_ENV} mode on port`.yellow.bold, `:${process.env.PORT}`.cyan
     )
 );
 

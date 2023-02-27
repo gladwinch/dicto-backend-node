@@ -1,6 +1,16 @@
 // data access layer
 class DataAccessLayer {
-    async create(payload={}) {
+    async create(payload={}, key) {
+        if(!key) return await this.model.create(payload)
+        if(!Array.isArray(payload)) payload = [payload]
+
+        const filter = payload.map(p => p[key])
+        const docs = await this.model.find({ 
+            [key]: filter
+        }, key)
+
+        payload = payload.filter(p => !docs.some(doc => doc[key] == p[key]))
+
         return await this.model.create(payload)
     }
 
