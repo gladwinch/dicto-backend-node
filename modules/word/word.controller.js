@@ -19,7 +19,6 @@ router.get('/', async (req, res, next) => {
         ws.getSynonyms(search),
         ws.getPhonetics(search)
     ])
-    
 
     res.json({
         success: true,

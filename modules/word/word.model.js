@@ -8,14 +8,62 @@ const mainSchema = {
         unique: true,
         required: [true, 'Please add a name']
     },
+    opposites: [String],
+    synonyms: [String],
+    sentences: [String],
+    definitions: [
+        {
+            simpleDefinition: String,
+            definition: String,
+            examples: [String],
+            partOfSpeech: String,
+            context: {
+                type: String,
+                default: "general"
+            },
+            priority: {
+                type: Number,
+                default: 0
+            }
+        }
+    ],
+    phonetics: [
+        { 
+            lang: String, 
+            text: String, 
+            audio: String
+        }
+    ],
+    etymology: {
+        roots: [
+            {
+                language: String,
+                word: String,
+                meaning: String,
+                timeline: String
+            }
+        ],
+        history: String
+    },
+    month: [
+        {
+            subword: com,
+            origin: Latin,
+            meaning: with, together
+        }
+    ]
+
+
+    word: {
+        type: String,
+        unique: true,
+        required: [true, 'Please add a name']
+    },
     meaning: {
         simple: String,
         medium: String,
         advance: String,
     },
-    opposites: [String],
-    synonyms: [String],
-    sentences: [String],
     pos: {
         type: String,
         enum: [

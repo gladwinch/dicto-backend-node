@@ -1,0 +1,25 @@
+{
+  "word": "comprehend",
+  "origin": {
+    "language": "Latin",
+    "word": "comprehendere",
+    "meaning": "to seize, to grasp"
+  },
+  "evolution": [
+    {
+      "century": "14th",
+      "meaning": "to seize, to arrest"
+    },
+    {
+      "century": "16th-17th",
+      "meaning": "to understand, to perceive"
+    }
+  ],
+  "current_usage": "To understand or perceive something"
+}
+
+{
+  "word": "comprehend",
+  "morphemes": ['different sub words here ],
+  "definition": "to seize together or to grasp with understanding"
+}
