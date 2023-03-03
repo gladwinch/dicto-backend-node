@@ -49,7 +49,7 @@ const WordSchema = new mongoose.Schema({
         {
             subword: String,
             origin: String,
-            meaning: string
+            meaning: String
         }
     ],
     evolution: [
