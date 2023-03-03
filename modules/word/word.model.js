@@ -52,6 +52,12 @@ const WordSchema = new mongoose.Schema({
             meaning: string
         }
     ],
+    evolution: [
+        {
+            century: String,
+            meaning: String
+        }
+    ],
     tags: [String],
     _meta: {
         type: mongoose.Schema.Types.Mixed,
