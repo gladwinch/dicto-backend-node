@@ -35,29 +35,9 @@ const WordSchema = new mongoose.Schema({
         }
     ],
     etymology: {
-        roots: [
-            {
-                language: String,
-                word: String,
-                meaning: String,
-                timeline: String
-            }
-        ],
-        history: String
+        type: mongoose.Schema.Types.Mixed,
+        required: false
     },
-    morphemes: [
-        {
-            subword: String,
-            origin: String,
-            meaning: String
-        }
-    ],
-    evolution: [
-        {
-            century: String,
-            meaning: String
-        }
-    ],
     tags: [String],
     _meta: {
         type: mongoose.Schema.Types.Mixed,
