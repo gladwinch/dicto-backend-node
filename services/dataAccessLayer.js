@@ -29,6 +29,10 @@ class DataAccessLayer {
         return await this.model.findById(id)
     }
 
+    async findOne(filters) {
+        return await this.model.findOne(filters)
+    }
+
     async read(_query={}) {
         let query
 

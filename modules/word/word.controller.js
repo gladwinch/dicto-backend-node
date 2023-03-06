@@ -7,28 +7,57 @@ const { wordService: ws } = require('./index.js')
 // search meaning
 router.get('/', async (req, res, next) => {
     const { search } = req.query
+    const payload = { 
+        word: search,
+        fields: {
+            sentences: 0,
+            synonyms: 0,
+            phonetics: 0,
+            definitions: 0
+        },
+        api_key: process.env.DICTO_EX_API_KEY
+    }
 
-    const [
-        sentences,
-        definition,
-        synonyms,
-        phonetics
-    ] = await Promise.all([
-        ws.getSentences(search),
-        ws.getDefinition(search),
-        ws.getSynonyms(search),
-        ws.getPhonetics(search)
-    ])
+    const result = await ws.findWord(search)
 
-    res.json({
-        success: true,
-        data: {
-            sentences,
-            definition,
-            synonyms,
-            phonetics
-        }
-    })
+    console.log('result -> ',result)
+    
+    if(!result) payload.fields = {
+        sentences: 1,
+        synonyms: 1,
+        phonetics: 1,
+        definitions: 1
+    }
+
+    if(result && !result.sentences && !result.sentences.length) payload.fields.sentences = 1
+    if(result && !result.synonyms && !result.synonyms.length) payload.fields.synonyms = 1
+    if(result && !result.phonetics && !result.phonetics.length) payload.fields.phonetics = 1
+    if(result && !result.definitions && !result.definitions.length) payload.fields.definitions = 1
+
+    let extract = false
+
+    for (const [_, value] of Object.entries(payload.fields)) {
+        if(value) extract = true
+    }
+
+    if(!extract) return res.status(200).json(result)
+
+    const { data } = await axios.post(
+        process.env.DICTO_EX_API, payload
+    )
+
+    let word
+
+    if(result && result._id) {
+        word = await ws.updateWord(result._id, data.data)
+    } else {
+        word = await ws.createWord({
+            word: search,
+            ...data.data
+        })
+    }
+
+    res.status(200).json(word)
 })
 
 // search meaning
@@ -51,10 +80,6 @@ router.get('/auto-complete', async function(req, res, next) {
         success: true, 
         data: result
     })
-
-    ws.createWord(
-        result.map(w =>({ word: w }))
-    )
 })
 
 // helper fn
