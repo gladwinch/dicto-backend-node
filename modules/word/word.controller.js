@@ -46,6 +46,14 @@ router.get('/', async (req, res, next) => {
         process.env.DICTO_EX_API, payload
     )
 
+    if (
+        !data.data || 
+        !data.data.definitions || 
+        !data.data.definitions.length
+    ) {
+        return res.status(200).json({ found: false })
+    }
+
     let word
 
     if(result && result._id) {
