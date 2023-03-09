@@ -33,6 +33,7 @@ module.exports = app => {
         cookie: {
             httpOnly: false,
             secure: false,
+            sameSite: 'none',
             maxAge: 60 * 60 * 1000
         },
         saveUninitialized: false
