@@ -1,86 +1,102 @@
 const express = require('express')
 const router = express.Router()
-const passport = require('passport')
-const { userService } = require('./index.js')
-const auth = require('../../middleware/auth')
+const jwt = require('jsonwebtoken')
 
-// create user
+const auth = require('../../middleware/auth')
+const { userService: us } = require('./index.js')
+
+// @desc      Create user
+// @route     POST /api/user
+// @access    Public
 router.post('/', async(req, res, next) => {
     try {
-        const user = await userService.create(req.body)
-        res.json({ success: true, data: user })
+        const _b = req.body
+        const user = await us.create(_b)
+        delete user.password
+
+        const token = generateToken({ 
+            userId: user._id, 
+            email: user.email 
+        })
+
+        res.cookie('auth-token', token, { httpOnly: true })
+
+        return res.json(user)
     } catch (error) {
-        console.log('ERROR: ', error)
+        console.log(error)
+        return res.status(500).json({ 
+            message: 'Internal server error' 
+        })
     }
 })
 
-// login user
-router.post('/login', function(req, res, next) {
-    passport.authenticate('local', function(err, user, info) {
-        if (err) { 
-            console.log('passport.authenticate() error')
-            return next(err)
-         }
-        if (!user) {
-            console.log('user not found 25')
-            res.status(400).json({ 
-                success: false, 
-                errors: ['password or email incorrect']
+// @desc      Login user
+// @route     POST /api/user/login
+// @access    Public
+router.post('/login', async (req, res, next) => {
+    try {
+        const _b = req.body
+        let user = await us.getUser({ email: _b.email })
+
+        if(!user) {
+            return res.status(404).json({ 
+                message: 'User not found' 
             })
         }
 
-        req.logIn(user, function(err) {
-            if (err) {
-                console.log('req.logIn err')
-                return next(err)
-            }
-            return res.json({ success: true, data: user })
+        const isMatch = await user.matchPassword(_b.password)
+        if(!isMatch) return res.status(401).json({ 
+            message: 'Invalid email or password' 
         })
-    })(req, res, next)
+        
+        user = user.toObject()
+        delete user.password
+
+        const token = generateToken({ 
+            userId: user._id, 
+            email: user.email 
+        })
+
+        res.cookie('auth-token', token, { httpOnly: true })
+
+        return res.json(user)
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' })
+    }
 })
 
-// get user
-router.get('/', auth, async(req, res, next) => {
+// @desc      Get loggedin user
+// @route     GET /api/user
+// @access    Private
+router.get('/', auth, async (req, res) => {
     try {
-        res.status(200).json({ 
-            success: true, 
-            data: req.user 
-        })
+        const user = await us.getUser({ _id: req.user._id })
+        res.status(200).json(user)
     } catch (error) {
         console.log('ERROR: ', error)
     }
 })
 
+// @desc      Logout user
+// @route     GET /api/user/logout
+// @access    Public
 router.get('/logout', (req, res) => {
-    req.logout(function(err) {
-        if (err) {
-          console.log(err)
-          res.send('Error logging out')
-        } else {
-            req.session.destroy(function(err) {
-                if (err) {
-                    console.log(err)
-                    res.send('session is not destroyed!')
-                } else {
-                    req.session = null
-                    res.send('successfull')
-                }
-            });
-        }
+    res.clearCookie('auth-token')
+    res.status(200).json({ 
+        message: 'Logged out successfully' 
     })
 })
 
-router.get('/sessions', (req, res) => {
-    req.sessionStore.all((err, sessions)=>{
-        res.json(sessions)
-    })
-})
-
-router.get('/token', (req, res) => {
-    console.log('***********************************')
-    console.log("TOKEN: ".red, req.query.token)
-    console.log('------------------------------')
-    res.json({ success: true })
-})
+// --------------------------- services ----------------------------
+function generateToken(payload) {
+    const token = jwt.sign(
+        payload, 
+        process.env.JWT_TOKEN_API_SECRET, 
+        { expiresIn: '720h' }
+    )
+    
+    return token
+}
 
 module.exports = router

@@ -7,8 +7,8 @@ class UserDataAccessLayer extends DataAccessLayer {
         this.markup = !!markup
     }
 
-    async getUserByEmail(email) {
-        return await this.model.findOne({ email })
+    async getUser(query) {
+        return await this.model.findOne(query)
     }
 }
 

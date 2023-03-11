@@ -6,9 +6,9 @@ const read = userDAL => async (query) => {
     return await userDAL.read(query)
 } 
 
-const getUser = userDAL => async (id) => {
-    return await userDAL.getById(id)
-} 
+const getUser = userDAL => async (query) => {
+    return await userDAL.getUser(query)
+}
 
 module.exports = ({ userDAL }) => {
     return {

@@ -1,4 +1,4 @@
-const session = require('express-session')
+// const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 // const RedisStore = require('connect-redis')(session)
@@ -26,18 +26,18 @@ const localAuthUser = async (email, password, done) => {
 
 module.exports = app => {
     // Use express-session middleware to store user sessions
-    app.use(session({
-        // store: new RedisStore({ client: redis }),
-        secret: process.env.SESSION_SECRET,
-        resave: true,
-        cookie: {
-            httpOnly: false,
-            secure: false,
-            sameSite: 'none',
-            maxAge: 60 * 60 * 1000
-        },
-        saveUninitialized: false
-    }))
+    // app.use(session({
+    //     // store: new RedisStore({ client: redis }),
+    //     secret: process.env.SESSION_SECRET,
+    //     resave: true,
+    //     cookie: {
+    //         httpOnly: false,
+    //         secure: false,
+    //         sameSite: 'none',
+    //         maxAge: 60 * 60 * 1000
+    //     },
+    //     saveUninitialized: false
+    // }))
 
     // Initialize passport and restore authentication state from the session
     app.use(passport.initialize())
