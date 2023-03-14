@@ -13,7 +13,7 @@ module.exports = app => {
                 // "https://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT
                 'http://localhost:3000',
                 'https://localhost:3000',
-                'https://dicto-dev.onrender.com'
+                'https://dicto-web.onrender.com'
             ]
         })
     )
