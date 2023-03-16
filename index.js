@@ -8,6 +8,7 @@ let app = express()
 loaders(app)
 
 // Routers
+app.set('trust proxy', 1)
 app.use(
     '/api',
     require("./config/path").include(express.Router())
