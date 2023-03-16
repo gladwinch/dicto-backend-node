@@ -22,7 +22,9 @@ router.post('/', async(req, res, next) => {
         res.cookie('auth-token', token, { 
             httpOnly: true,
             secure: process.env.NODE_ENV == 'production',
-            domain: '.dicto-web-app-vg5nh.ondigitalocean.app'
+            domain: '.dicto-web-app-vg5nh.ondigitalocean.app',
+            sameSite: 'none',
+            path: '/'
         })
 
         return res.json(user)
@@ -64,7 +66,9 @@ router.post('/login', async (req, res, next) => {
         res.cookie('auth-token', token, { 
             httpOnly: true,
             secure: process.env.NODE_ENV == 'production',
-            domain: '.dicto-web-app-vg5nh.ondigitalocean.app'
+            domain: '.dicto-web-app-vg5nh.ondigitalocean.app',
+            sameSite: 'none',
+            path: '/'
         })
 
         return res.json(user)
