@@ -1,5 +1,6 @@
 const express = require('express')
 const loaders = require('./loaders')
+const axios = require('axios')
 
 // app configuration
 let app = express()
@@ -15,6 +16,16 @@ app.use(
 
 app.get('/ping', (req, res) => {
     res.send('pong')
+})
+
+app.get('/message', async (req, res) => {
+    try {
+        const data = await axios(process.env.DICTO_EX_API+'/message')
+        console.log(data.data)   
+        res.json(data.data)
+    } catch (error) {
+        console.log("ERROR > ", error)
+    }
 })
 
 const server = app.listen(
