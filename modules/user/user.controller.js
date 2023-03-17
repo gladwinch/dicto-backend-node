@@ -19,7 +19,13 @@ router.post('/', async(req, res, next) => {
             email: user.email 
         })
 
-        res.cookie('auth-token', token, { httpOnly: true })
+        res.cookie('auth-token', token, { 
+            httpOnly: true,
+            secure: process.env.NODE_ENV == 'production',
+            domain: '.dicto-web-app-vg5nh.ondigitalocean.app',
+            sameSite: 'none',
+            path: '/'
+        })
 
         return res.json(user)
     } catch (error) {
@@ -57,7 +63,13 @@ router.post('/login', async (req, res, next) => {
             email: user.email 
         })
 
-        res.cookie('auth-token', token, { httpOnly: true })
+        res.cookie('auth-token', token, { 
+            httpOnly: true,
+            secure: process.env.NODE_ENV == 'production',
+            domain: '.dicto-web-app-vg5nh.ondigitalocean.app',
+            sameSite: 'none',
+            path: '/'
+        })
 
         return res.json(user)
     } catch (err) {

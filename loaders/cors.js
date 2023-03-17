@@ -8,13 +8,13 @@ module.exports = app => {
     app.use(
         cors({
             credentials: true,
-            origin: [
-                // "http://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT,
-                // "https://" + WEB_SERVER_HOST + ":" + WEB_SERVER_PORT
-                'http://localhost:3000',
-                'https://localhost:3000',
-                'https://dicto-dev.onrender.com'
-            ]
+            origin: "https://dicto-web-app-vg5nh.ondigitalocean.app",
+            // origin: [
+            //     'http://localhost:3000',
+            //     'https://localhost:3000',
+            //     'https://dicto-web-app-vg5nh.ondigitalocean.app',
+            //     'https://dicto.io'
+            // ]
         })
     )
 }
