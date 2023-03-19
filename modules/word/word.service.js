@@ -1,9 +1,17 @@
+const Word = require('./word.model')
+
 const findWord = wordDAL => async (word) => {
     return await wordDAL.findOne({ word })
 }
 
 const createWord = wordDAL => async (payload) => {
-    return await wordDAL.create(payload)
+    const word = await Word.findOne({ word: payload.word })
+
+    if(!word) {
+        return await wordDAL.create(payload)
+    }
+
+    return word
 }
 
 const updateWord = wordDAL => async (id, payload) => {
@@ -22,7 +30,7 @@ const parseResult = word => {
         parsedRes.definitions[hasPosInx] = swapEl
     }
 
-    return {
+    let wordData = {
         ...parsedRes,
         definitions: parsedRes.definitions.map(r => {
             return {
@@ -39,6 +47,19 @@ const parseResult = word => {
         }),
         synonyms: parsedRes.synonyms.map(r => r.replace('_', ' '))
     }
+
+    // bring up the definition that has pos
+    if (wordData.definitions[0].partOfSpeech === '') {
+        let inx = wordData.definitions.findIndex(o => o.partOfSpeech)
+    
+        if(inx) {
+            let item = wordData.definitions[0]
+            wordData.definitions[0] = wordData.definitions[inx]
+            wordData.definitions[inx] = item
+        }
+    }
+
+    return wordData
 }
 
 module.exports = ({ wordDAL }) => {

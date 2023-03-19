@@ -8,9 +8,18 @@ const WordSchema = new mongoose.Schema({
         unique: true,
         required: [true, 'Please add a name']
     },
-    opposites: [String],
-    synonyms: [String],
-    sentences: [String],
+    opposites: {
+        type: [String],
+        default: []
+    },
+    synonyms: {
+        type: [String],
+        default: []
+    },
+    sentences: {
+        type: [String],
+        default: []
+    },
     definitions: [
         {
             simpleDefinition: String,
@@ -27,13 +36,16 @@ const WordSchema = new mongoose.Schema({
             }
         }
     ],
-    phonetics: [
-        { 
-            lang: String, 
-            text: String, 
-            audio: String
-        }
-    ],
+    phonetics: {
+        type: [
+            { 
+                lang: String, 
+                text: String, 
+                audio: String
+            }
+        ],
+        default: []
+    },
     etymology: {
         type: mongoose.Schema.Types.Mixed,
         required: false

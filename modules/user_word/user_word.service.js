@@ -13,9 +13,14 @@ const readUW = async (userId) => {
     return await UserWord.find({ userId }).populate('wordId')
 }
 
+const updateUW = async (_id, payload) => {
+    return await UserWord.updateOne({ _id }, payload)
+}
+
 module.exports = ({ userWordDAL }) => {
     return {
         createUW,
-        readUW
+        readUW,
+        updateUW
     }
 }
