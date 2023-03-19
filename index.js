@@ -1,6 +1,5 @@
 const express = require('express')
 const loaders = require('./loaders')
-
 // app configuration
 let app = express()
 
@@ -15,7 +14,7 @@ app.use(
 )
 
 app.get('/ping', (req, res) => {
-    res.send('pong')
+    res.send('pong from dicto api')
 })
 
 const server = app.listen(
