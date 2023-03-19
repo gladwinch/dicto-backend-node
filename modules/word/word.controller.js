@@ -1,11 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const axios = require('axios')
-
+const search = require('../../middleware/search')
 const { wordService: ws } = require('./index.js')
+const uwService = require('../user_word')
 
-// search meaning
-router.get('/', async (req, res) => {
+// @desc      Search word
+// @route     GET /api/word
+// @access    Public
+router.get('/', search, async (req, res) => {
     const { search } = req.query
     let response = null
 
@@ -42,17 +45,23 @@ router.get('/', async (req, res) => {
         if(value) extract = true
     }
 
-    response = parseResult(result)
+    response = ws.parseResult(result)
 
     if(!extract && response) {
-        return res.status(200).json(response)
+        res.status(200).json(response)
+
+        // save user word
+        if(req.userId && response._id) uwService.createUW({
+            userId: req.userId,
+            wordId: response._id
+        })
+
+        return
     }
 
     const { data } = await axios.post(
         process.env.DICTO_EX_API, payload
     )
-
-    console.log('data -< .... >', data.data)
 
     if (
         !data.data || 
@@ -73,11 +82,19 @@ router.get('/', async (req, res) => {
         })
     }
 
-    response = parseResult(word)
+    response = ws.parseResult(word)
     res.status(200).json(response)
+
+    // save user word
+    if(req.userId && word.word) uwService.createUW({
+        userId: req.userId,
+        wordId: word._id
+    })
 })
 
-// search meaning
+// @desc      Search auto complete word
+// @route     GET /api/word/auto-complete
+// @access    Public
 router.get('/auto-complete', async function(req, res, next) {
     const link = process.env.AUTO_COMPLETE_API
     const _b = req.query
@@ -94,38 +111,5 @@ router.get('/auto-complete', async function(req, res, next) {
     
     res.status(200).json(result)
 })
-
-// helper fn
-
-function parseResult(word) {
-    if(!word || !word.definitions || !word.definitions[0]) return null
-
-    let parsedRes = JSON.parse(JSON.stringify(word))
-    let hasPosInx = parsedRes.definitions.findIndex(r => r.partOfSpeech.length)
-
-    if(hasPosInx > 0 && hasPosInx !== -1) {
-        let swapEl = parsedRes.definitions[0]
-        parsedRes.definitions[0] = parsedRes.definitions[hasPosInx]
-        parsedRes.definitions[hasPosInx] = swapEl
-    }
-
-    return {
-        ...parsedRes,
-        definitions: parsedRes.definitions.map(r => {
-            return {
-                ...r,
-                partOfSpeech: (r && r.partOfSpeech) ? r.partOfSpeech.split("[")[0].trim().toLowerCase() : '',
-                definition: (r && r.definition) ? r.definition.charAt(0).toUpperCase() + r.definition.slice(1) : ''
-            }
-        }),
-        phonetics: parsedRes.phonetics.map(r => {
-            return {
-                ...r,
-                text: r.text ? r.text.replace('//','/') : ''
-            }
-        }),
-        synonyms: parsedRes.synonyms.map(r => r.replace('_', ' '))
-    }
-}
 
 module.exports = router
