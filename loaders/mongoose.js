@@ -8,7 +8,7 @@ mongoose.connect(
         useUnifiedTopology: true
     },
     (err) => {
-        if (!err) return console.log('CONNECTED TO MONGODB DATABASE'.brightBlue)
+        if (!err) return console.log('CONNECTED TO MONGODB DATABASE'.green)
 
         console.log('[Error] COULD NOT CONNECT DATABASE', err)
     }

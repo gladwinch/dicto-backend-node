@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const jwt = require('jsonwebtoken')
 
 const auth = require('../../middleware/auth')
 const { userService: us } = require('./index.js')
@@ -14,19 +13,12 @@ router.post('/', async(req, res, next) => {
         const user = await us.create(_b)
         delete user.password
 
-        const token = generateToken({ 
+        const token = us.generateToken({ 
             userId: user._id, 
             email: user.email 
         })
 
-        res.cookie('auth-token', token, { 
-            httpOnly: true,
-            secure: process.env.NODE_ENV == 'production',
-            domain: '.dicto-web-app-vg5nh.ondigitalocean.app',
-            sameSite: 'none',
-            path: '/'
-        })
-
+        us.sendCookie(res, token)
         return res.json(user)
     } catch (error) {
         console.log(error)
@@ -58,19 +50,12 @@ router.post('/login', async (req, res, next) => {
         user = user.toObject()
         delete user.password
 
-        const token = generateToken({ 
+        const token = us.generateToken({ 
             userId: user._id, 
             email: user.email 
         })
 
-        res.cookie('auth-token', token, { 
-            httpOnly: true,
-            secure: process.env.NODE_ENV == 'production',
-            domain: '.dicto-web-app-vg5nh.ondigitalocean.app',
-            sameSite: 'none',
-            path: '/'
-        })
-
+        us.sendCookie(res, token)
         return res.json(user)
     } catch (err) {
         console.error(err);
@@ -99,16 +84,5 @@ router.get('/logout', (req, res) => {
         message: 'Logged out successfully' 
     })
 })
-
-// --------------------------- services ----------------------------
-function generateToken(payload) {
-    const token = jwt.sign(
-        payload, 
-        process.env.JWT_TOKEN_API_SECRET, 
-        { expiresIn: '720h' }
-    )
-    
-    return token
-}
 
 module.exports = router

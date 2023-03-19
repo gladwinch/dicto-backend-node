@@ -8,7 +8,7 @@ let app = express()
 loaders(app)
 
 // Routers
-app.set('trust proxy', 1)
+// app.set('trust proxy', 1)
 app.use(
     '/api',
     require("./config/path").include(express.Router())
@@ -21,7 +21,7 @@ app.get('/ping', (req, res) => {
 const server = app.listen(
     process.env.PORT,
     console.log(
-        `Server running in ${process.env.NODE_ENV} mode on port`.yellow.bold, `:${process.env.PORT}`.cyan
+        `Server running in ${process.env.NODE_ENV} mode on port`.yellow.bold, `${process.env.PORT}`.cyan
     )
 );
 
