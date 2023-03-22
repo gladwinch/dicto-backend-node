@@ -1,11 +1,16 @@
 const UserWord = require('./user_word.model')
 
 // create user with payload
-const createUW = async ({ userId, wordId }) => {
-    const uwExist = await UserWord.findOne({ wordId, userId })
+const createUW = async ({ userId, word }) => {
+    console.log('createUW -> ',{ userId, word })
+
+    const uwExist = await UserWord.findOne({ word, userId })
 
     if(!uwExist) {
-        return await UserWord.create({ userId, wordId })
+        console.log('createing')
+        let d = await UserWord.create({ userId, word })
+        console.log(d)
+        return d
     }
 }
 
@@ -14,13 +19,12 @@ const readUW = async (userId) => {
 }
 
 const updateUW = async (_id, payload) => {
+    console.log('payload -> ', payload)
     return await UserWord.updateOne({ _id }, payload)
 }
 
-module.exports = ({ userWordDAL }) => {
-    return {
-        createUW,
-        readUW,
-        updateUW
-    }
+module.exports = {
+    createUW,
+    readUW,
+    updateUW
 }

@@ -9,8 +9,8 @@ const UserWordSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    wordId: {
-        type: mongoose.Schema.Types.ObjectId,
+    word: {
+        type: String,
         ref: 'Word',
         required: true
     },
@@ -34,5 +34,12 @@ const UserWordSchema = new mongoose.Schema({
         default: 0
     }
 }, opts)
+
+UserWordSchema.virtual('wordId', {
+    ref: 'Word',
+    localField: 'word',
+    foreignField: 'word',
+    justOne: true
+})
 
 module.exports = mongoose.model('UserWord', UserWordSchema)

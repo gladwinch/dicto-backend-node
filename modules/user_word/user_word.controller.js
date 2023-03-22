@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const auth = require('../../middleware/auth')
+const search = require('../../middleware/search')
 const uws = require('./index.js') // user word service
 
 // @desc      Create user word
@@ -48,14 +49,39 @@ router.get('/', auth, async(req, res) => {
 })
 
 // @desc      Update user word
-// @route     POST /api/word_user
+// @route     PUT /api/word_user
 // @access    Private
-router.post('/', auth, async(req, res) => {
+router.put('/', auth, async(req, res) => {
     try {
         const _b = req.body
 
         console.log('payload: ', _b)
-        await uws.updateUW({ _id: _b._id}, _b.payload)
+        await uws.updateUW(_b._id, _b.payload)
+
+        res.status(201).json({
+            success: true
+        })
+    } catch (error) {
+        console.error(error)
+
+        return res.status(500).json({ 
+            message: 'Internal server error' 
+        })
+    }   
+})
+
+// @desc      Create user word
+// @route     POST /api/word_user
+// @access    Private
+router.post('/', search, async(req, res) => {
+    try {
+        const _b = req.body
+
+        console.log('payload: ', _b)
+        await uws.createUW({
+            userId: req.userId,
+            word: _b.word
+        })
 
         res.status(201).json({
             success: true

@@ -29,13 +29,14 @@ const generateToken = (payload) => {
 // send token via cookie
 const sendCookie = (res, token) => {
     let cookieOptions = {
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production'
     }
 
     if(process.env.NODE_ENV === 'production') {
         cookieOptions.domain = process.env.MAIN_DOMAIN
         cookieOptions.sameSite = 'none'
+        cookieOptions.httpOnly = true
     }
 
     res.cookie('auth-token', token, cookieOptions)

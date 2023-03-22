@@ -53,7 +53,7 @@ router.get('/', search, async (req, res) => {
         // save user word
         if(req.userId && response._id) uwService.createUW({
             userId: req.userId,
-            wordId: response._id
+            word: response.word
         })
 
         return
@@ -88,7 +88,7 @@ router.get('/', search, async (req, res) => {
     // save user word
     if(req.userId && word.word) uwService.createUW({
         userId: req.userId,
-        wordId: word._id
+        word: word.word
     })
 })
 

@@ -4,8 +4,17 @@ module.exports = {
     'POST_/': {
         type: "object",
         properties: {
-            _id: { type: "string" }
+            word: { type: "string" }
         },
-        required: ["_id"]
+        required: ["word"]
+    },
+
+    'PUT_/': {
+        type: "object",
+        properties: {
+            _id: { type: "string" },
+            payload: { type: "object" }
+        },
+        required: ["payload","_id"]
     },
 }
