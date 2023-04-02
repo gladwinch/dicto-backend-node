@@ -82,7 +82,7 @@ router.post('/notification', async (req, res) => {
     try {
         const _b = req.body
 
-        if(!_b.email || !_b.notificationId) {
+        if(!_b.email || !_b.fcmToken) {
             return res.json({ success: false, message: "Invalid request" })
         }
         
@@ -93,7 +93,7 @@ router.post('/notification', async (req, res) => {
         }
 
         await us.updateUser(user._id, { 
-            notificationId: _b.notificationId 
+            fcmToken: _b.fcmToken 
         })
 
         res.status(200).json({  message: "Notification added" })

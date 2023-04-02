@@ -13,10 +13,10 @@ module.exports = {
     'POST_/notification': {
         type: "object",
         properties: {
-            notificationId: { type: "string" },
+            fcmToken: { type: "string" },
             email: { type: "string" }
         },
-        required: ["email","notificationId"]
+        required: ["email","fcmToken"]
     },
     
     'POST_/login': {

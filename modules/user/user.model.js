@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         minlength: 7
     },
-    notificationId: {
+    fcmToken: {
         type: String,
         default: null
     },
