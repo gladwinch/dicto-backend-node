@@ -4,14 +4,6 @@ function auth(req, res, next) {
 	const token = req.cookies['auth-token'];
 
 	if (!token) {
-		if(req.headers.userid) {
-			req.user = {
-				_id: req.headers.userid
-			}
-
-			return next()
-		}
-
 		return res.status(401).json({ message: 'Unauthorized' });
 	}
 
