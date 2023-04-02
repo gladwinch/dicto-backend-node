@@ -87,11 +87,14 @@ router.post('/notification', async (req, res) => {
         }
         
         const user = await us.getUser({ email: _b.email })
-        let d = await us.updateUser(user._id, { 
+
+        if(!user) {
+            return res.json({ success: false, message: "Invalid request" })
+        }
+
+        await us.updateUser(user._id, { 
             notificationId: _b.notificationId 
         })
-
-        console.log(d)
 
         res.status(200).json({  message: "Notification added" })
     } catch (error) {
