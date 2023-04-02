@@ -9,6 +9,15 @@ module.exports = {
         },
         required: ["name","email","password"]
     },
+
+    'POST_/notification': {
+        type: "object",
+        properties: {
+            notificationId: { type: "string" },
+            email: { type: "string" }
+        },
+        required: ["email","notificationId"]
+    },
     
     'POST_/login': {
         type: "object",

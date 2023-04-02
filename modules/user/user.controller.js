@@ -75,6 +75,30 @@ router.get('/', auth, async (req, res) => {
     }
 })
 
+// @desc      Create notification token for user
+// @route     POST /api/notification
+// @access    Public
+router.post('/notification', async (req, res) => {
+    try {
+        const _b = req.body
+
+        if(!_b.email || !_b.notificationId) {
+            return res.json({ success: false, message: "Invalid request" })
+        }
+        
+        const user = await us.getUser({ email: _b.email })
+        let d = await us.updateUser(user._id, { 
+            notificationId: _b.notificationId 
+        })
+
+        console.log(d)
+
+        res.status(200).json({  message: "Notification added" })
+    } catch (error) {
+        console.log('ERROR: ', error)
+    }
+})
+
 // @desc      Logout user
 // @route     GET /api/user/logout
 // @access    Public

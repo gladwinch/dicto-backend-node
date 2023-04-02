@@ -19,7 +19,6 @@ const readUW = async (userId) => {
 }
 
 const updateUW = async (_id, payload) => {
-    console.log('payload -> ', payload)
     return await UserWord.updateOne({ _id }, payload)
 }
 

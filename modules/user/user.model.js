@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         minlength: 7
     },
+    notificationId: {
+        type: String,
+        default: null
+    },
     avatar: {
         type: String,
         default: null

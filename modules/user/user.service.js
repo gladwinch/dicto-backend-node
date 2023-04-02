@@ -15,6 +15,11 @@ const getUser = userDAL => async (query) => {
     return await userDAL.getUser(query)
 }
 
+// get single user
+const updateUser = userDAL => async (id, payload) => {
+    return await userDAL.updateById(id, payload)
+}
+
 // generate token for user auth
 const generateToken = (payload) => {
     const token = jwt.sign(
@@ -47,6 +52,7 @@ module.exports = ({ userDAL }) => {
         create: create(userDAL),
         read: read(userDAL),
         getUser: getUser(userDAL),
+        updateUser: updateUser(userDAL),
         generateToken,
         sendCookie
     }
