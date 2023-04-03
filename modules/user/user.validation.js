@@ -28,6 +28,8 @@ module.exports = {
         required: ["email","password"]
     },
 
+    'GET_/google': {},
+
     'GET_/': {},
 
     'GET_/sessions': {},

@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const jwt = require('jsonwebtoken');
+const axios = require('axios')
 
 const auth = require('../../middleware/auth')
 const { userService: us } = require('./index.js')
@@ -72,6 +74,93 @@ router.get('/', auth, async (req, res) => {
         res.status(200).json(user)
     } catch (error) {
         console.log('ERROR: ', error)
+    }
+})
+
+// @desc      Get google hook
+// @route     GET /api/user/google
+// @access    Public
+router.get('/google', async (req, res) => {
+    try {
+        const code = req.query.code
+        const url = "https://oauth2.googleapis.com/token"
+        const values = {
+            code,
+            client_id: process.env.GOOGLE_CLIENT_ID,
+            client_secret: process.env.GOOGLE_CLIENT_SECRET,
+            redirect_uri: process.env.GOOGLE_REDIRECT_URL,
+            grant_type: "authorization_code",
+        }
+
+        let data 
+
+        console.log('url : ', url)
+        console.log('values : ', values)
+        try {
+            data = await axios.post(url, values, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
+
+        const { access_token, id_token } = data.data
+        let googleRes
+
+        try {
+            googleRes = await axios
+            .get(
+                `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,
+                { 	headers: {
+                        Authorization: `Bearer ${id_token}`,
+                    }
+                }
+            )
+        } catch (error) {
+            console.log(error)
+            throw new Error
+        }
+
+        const userData = {
+            name: googleRes.data.name,
+            email: googleRes.data.email,
+            avatar: googleRes.data.picture,
+            organization: googleRes.data.hd,
+            googleId: googleRes.data.id
+        }
+
+        // check if user exist
+        let user = await us.create(userData)
+
+        const payload = {
+            userId: user._id,
+            email: user.email
+        }
+
+        // generate auth token
+        const token = jwt.sign(
+            payload, 
+            process.env.JWT_TOKEN_API_SECRET, 
+            { expiresIn: '720h' }
+        )
+    
+        let cookieOptions = {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === 'production'
+        }
+
+        if(process.env.NODE_ENV === 'production') {
+            cookieOptions.domain = process.env.MAIN_DOMAIN
+            cookieOptions.sameSite = 'none'
+            cookieOptions.httpOnly = true
+        }
+
+        res.cookie('auth-token', token, cookieOptions)
+        res.redirect(process.env.BACK_REDIRECT_URL)
+    } catch (error) {
+        console.log('[ERROR] user/google', error)
     }
 })
 

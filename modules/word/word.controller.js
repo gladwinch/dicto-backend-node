@@ -52,10 +52,13 @@ router.get('/', search, async (req, res) => {
         res.status(200).json(response)
 
         // save user word
-        if(req.userId && response._id) uwService.createUW({
-            userId: req.userId,
-            word: response.word
-        })
+        if(req.userId && response._id) {
+            console.log('--- 56')
+            uwService.createUW({
+                userId: req.userId,
+                word: response.word
+            })
+        }
 
         return
     }
@@ -87,10 +90,13 @@ router.get('/', search, async (req, res) => {
     res.status(200).json(response)
 
     // save user word
-    if(req.userId && word.word) uwService.createUW({
-        userId: req.userId,
-        word: word.word
-    })
+    if(req.userId && word.word) {
+        console.log('---', 94)
+        uwService.createUW({
+            userId: req.userId,
+            word: word.word
+        })
+    }
 })
 
 // @desc      Search auto complete word

@@ -2,8 +2,14 @@ const jwt = require('jsonwebtoken')
 const User = require('./user.model')
 
 // create user with payload
-const create = userDAL => async (payload) => {
-    return await userDAL.create(payload)
+const create = async (payload) => {
+    const user = await User.findOne({ email: payload.email })
+
+    if(user) {
+        return user
+    }
+
+    return await User.create(payload)
 }
 
 // get user list with pagination
@@ -56,7 +62,7 @@ const sendCookie = (res, token) => {
 
 module.exports = ({ userDAL }) => {
     return {
-        create: create(userDAL),
+        create,
         read: read(userDAL),
         getUser: getUser(userDAL),
         updateUser: updateUser(userDAL),

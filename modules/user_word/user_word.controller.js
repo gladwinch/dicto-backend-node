@@ -38,6 +38,8 @@ router.get('/', auth, async(req, res) => {
             }
         })
 
+        console.log('uwList -> ', uwList)
+
         return res.status(200).json(uwList)
     } catch (error) {
         console.error(error)
