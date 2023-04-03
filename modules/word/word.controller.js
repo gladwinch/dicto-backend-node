@@ -53,7 +53,6 @@ router.get('/', search, async (req, res) => {
 
         // save user word
         if(req.userId && response._id) {
-            console.log('--- 56')
             uwService.createUW({
                 userId: req.userId,
                 word: response.word
@@ -91,7 +90,6 @@ router.get('/', search, async (req, res) => {
 
     // save user word
     if(req.userId && word.word) {
-        console.log('---', 94)
         uwService.createUW({
             userId: req.userId,
             word: word.word

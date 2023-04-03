@@ -36,8 +36,6 @@ class DataAccessLayer {
     async read(_query={}) {
         let query
 
-        console.log('reading read', _query)
-
         const reqQuery = { ..._query }
         const removeFields = ['select', 'sort', 'page', 'limit', 'populate']
 
@@ -73,8 +71,6 @@ class DataAccessLayer {
         }
 
         const results = await query
-
-        console.log('reading results', results)
         const pagination = {}
 
         if (endIndex < total) {
@@ -90,8 +86,6 @@ class DataAccessLayer {
                 limit
             }
         }
-
-        console.log('return rfsdg')
 
         return {
             success: true,

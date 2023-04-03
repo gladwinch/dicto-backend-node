@@ -2,14 +2,10 @@ const UserWord = require('./user_word.model')
 
 // create user with payload
 const createUW = async ({ userId, word }) => {
-    console.log('createUW -> ',{ userId, word })
-
     const uwExist = await UserWord.findOne({ word, userId })
 
     if(!uwExist) {
-        console.log('createing')
         let d = await UserWord.create({ userId, word })
-        console.log(d)
         return d
     }
 }

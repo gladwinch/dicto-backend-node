@@ -93,9 +93,6 @@ router.get('/google', async (req, res) => {
         }
 
         let data 
-
-        console.log('url : ', url)
-        console.log('values : ', values)
         try {
             data = await axios.post(url, values, {
                 headers: {
