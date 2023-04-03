@@ -9,11 +9,5 @@ module.exports = {
         required: ["word"]
     },
 
-    'GET_/': {},
-
-    'GET_/sessions': {},
-
-    'GET_/logout': {},
-
-    'GET_/token': {}
+    'GET_/notification': {}
 }

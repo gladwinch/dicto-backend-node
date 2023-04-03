@@ -54,8 +54,6 @@ router.get('/', auth, async(req, res) => {
 router.put('/', auth, async(req, res) => {
     try {
         const _b = req.body
-
-        console.log('payload: ', _b)
         await uws.updateUW(_b._id, _b.payload)
 
         res.status(201).json({
@@ -76,8 +74,6 @@ router.put('/', auth, async(req, res) => {
 router.post('/', search, async(req, res) => {
     try {
         const _b = req.body
-
-        console.log('payload: ', _b)
         await uws.createUW({
             userId: req.userId,
             word: _b.word

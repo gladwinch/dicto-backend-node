@@ -4,6 +4,7 @@ const axios = require('axios')
 const search = require('../../middleware/search')
 const { wordService: ws } = require('./index.js')
 const uwService = require('../user_word')
+const { userService: us } = require('../user/index')
 
 // @desc      Search word
 // @route     GET /api/word
@@ -110,6 +111,94 @@ router.get('/auto-complete', async function(req, res, next) {
     result = result.data.map(i => i.word).filter(w=> !w.includes(' ')).slice(0, 4)
     
     res.status(200).json(result)
+})
+
+// @desc      Send notification
+// @route     GET /api/word/notification
+// @access    Public
+let NCONFIG = {
+    'N': 5, 'L': 3, 'P': 2, 'K': 1
+}
+
+router.get('/notification', async function(req, res, next) {
+    if(req.headers.api_key !== process.env.DICTO_EX_API_KEY) {
+        return res.status(401).send("Unauthorize!")
+    }
+
+    let users = await us.getProUser()
+    users = users.filter(u => u.fcmToken)
+
+    const nConf = { ...NCONFIG }
+
+    for (let prop in nConf) {
+        if (nConf[prop] === 0) {
+            delete nConf[prop]
+        }
+    }
+
+    if(!NCONFIG['N'] && !NCONFIG['L'] && !NCONFIG['P'] && !NCONFIG['K']) {
+        NCONFIG = {
+            'N': 5, 'L': 3, 'P': 2, 'K': 1
+        }
+
+        return res.send("RESET")
+    }
+
+    const keys = Object.keys(nConf)
+    const randomIndex = Math.floor(Math.random() * keys.length)
+    const selectedKey = keys[randomIndex]
+    NCONFIG[selectedKey] = NCONFIG[selectedKey] - 1
+
+    res.status(200).json(NCONFIG)
+
+    for(let user of users) {
+        const tableMap = {
+            'N': 'new',
+            'L': 'learn',
+            'P': 'practice',
+            'K': 'known', 
+        }
+        
+        let uwList = await uwService.readUW(user._id)
+
+        if(uwList && uwList.length) {
+            uwList = JSON.parse(JSON.stringify(uwList))
+            let wArr = uwList.filter(x => x.table === tableMap[selectedKey])
+            if(!wArr.length) wArr = uwList
+
+            const wInx = Math.floor(Math.random() * wArr.length)
+            const word = wArr[wInx]
+            let sentence = ""
+            const sentences = word.wordId.sentences
+
+            if(sentences.length) {
+                let sInx = Math.floor(Math.random() * sentences.length)
+                sentence = sentences[sInx]
+            }
+
+            // :TODO move word to table
+            
+            // send notification
+            const notificationData = {
+                "to": user.fcmToken,
+                "notification": {
+                    "body": sentence,
+                    "title": word.word,
+                    "subtitle": tableMap[selectedKey]
+                }
+            }
+
+            await axios.post(
+                'https://fcm.googleapis.com/fcm/send', 
+                notificationData, 
+                {
+                    headers: {
+                        'Authorization': process.env.FCM_SERVER_KEY
+                    }
+                }
+            )
+        }
+    }
 })
 
 module.exports = router

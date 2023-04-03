@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const User = require('./user.model')
 
 // create user with payload
 const create = userDAL => async (payload) => {
@@ -18,6 +19,12 @@ const getUser = userDAL => async (query) => {
 // get single user
 const updateUser = userDAL => async (id, payload) => {
     return await userDAL.updateById(id, payload)
+}
+
+const getProUser = async () => {
+    return await User.find({
+        // :TODO pro user query
+    }).select({ name: 1, email: 1, fcmToken: 1 })
 }
 
 // generate token for user auth
@@ -53,6 +60,7 @@ module.exports = ({ userDAL }) => {
         read: read(userDAL),
         getUser: getUser(userDAL),
         updateUser: updateUser(userDAL),
+        getProUser,
         generateToken,
         sendCookie
     }
