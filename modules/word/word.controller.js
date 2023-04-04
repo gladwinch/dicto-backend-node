@@ -124,19 +124,12 @@ let NCONFIG = {
     'N': 5, 'L': 3, 'P': 2, 'K': 1
 }
 
-router.get('/notification', async function(req, res, next) {
-    console.log('req.headers.api_key: ', req.headers)
-    console.log('process.env.DICTO_EX_API_KEY: ', process.env.DICTO_EX_API_KEY)
-    var host = req.get('host');
-
-    console.log('host: ', host)
-    var origin = req.get('origin');
-    console.log('origin: ', origin)
+router.post('/notification', async function(req, res, next) {
     try {
-        if(req.headers.api_key !== process.env.DICTO_EX_API_KEY) {
+        if(req.body.api_key !== process.env.DICTO_EX_API_KEY) {
             return res.status(401).send("Unauthorize!")
         }
-    
+
         let users = await us.getProUser()
         users = users.filter(u => u.fcmToken)
     
