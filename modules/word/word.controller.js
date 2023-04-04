@@ -125,7 +125,7 @@ let NCONFIG = {
 }
 
 router.get('/notification', async function(req, res, next) {
-    console.log('req.headers.api_key: ', req.headers.api_key)
+    console.log('req.headers.api_key: ', req.headers)
     console.log('process.env.DICTO_EX_API_KEY: ', process.env.DICTO_EX_API_KEY)
     try {
         if(req.headers.api_key !== process.env.DICTO_EX_API_KEY) {
