@@ -10,9 +10,9 @@ module.exports = app => {
             credentials: true,
             origin: [
                 'http://localhost:3000',
-                'https://localhost:3000',
-                'https://dicto-web-app-vg5nh.ondigitalocean.app',
-                'https://dicto.io'
+                'https://dicto.io',
+                'http://localhost:2000',
+                'http://65.0.70.81:2000'
             ]
         })
     )
