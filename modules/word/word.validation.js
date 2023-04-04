@@ -9,5 +9,5 @@ module.exports = {
         required: ["word"]
     },
 
-    'GET_/notification': {}
+    'POST_/notification': {}
 }
