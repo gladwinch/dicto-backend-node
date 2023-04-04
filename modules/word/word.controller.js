@@ -127,6 +127,11 @@ let NCONFIG = {
 router.get('/notification', async function(req, res, next) {
     console.log('req.headers.api_key: ', req.headers)
     console.log('process.env.DICTO_EX_API_KEY: ', process.env.DICTO_EX_API_KEY)
+    var host = req.get('host');
+
+    console.log('host: ', host)
+    var origin = req.get('origin');
+    console.log('origin: ', origin)
     try {
         if(req.headers.api_key !== process.env.DICTO_EX_API_KEY) {
             return res.status(401).send("Unauthorize!")
