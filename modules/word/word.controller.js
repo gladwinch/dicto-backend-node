@@ -125,83 +125,108 @@ let NCONFIG = {
 }
 
 router.get('/notification', async function(req, res, next) {
-    if(req.headers.api_key !== process.env.DICTO_EX_API_KEY) {
-        return res.status(401).send("Unauthorize!")
-    }
-
-    let users = await us.getProUser()
-    users = users.filter(u => u.fcmToken)
-
-    const nConf = { ...NCONFIG }
-
-    for (let prop in nConf) {
-        if (nConf[prop] === 0) {
-            delete nConf[prop]
+    console.log('req.headers.api_key: ', req.headers.api_key)
+    console.log('process.env.DICTO_EX_API_KEY: ', process.env.DICTO_EX_API_KEY)
+    try {
+        if(req.headers.api_key !== process.env.DICTO_EX_API_KEY) {
+            return res.status(401).send("Unauthorize!")
         }
-    }
-
-    if(!NCONFIG['N'] && !NCONFIG['L'] && !NCONFIG['P'] && !NCONFIG['K']) {
-        NCONFIG = {
-            'N': 5, 'L': 3, 'P': 2, 'K': 1
-        }
-
-        return res.send("RESET")
-    }
-
-    const keys = Object.keys(nConf)
-    const randomIndex = Math.floor(Math.random() * keys.length)
-    const selectedKey = keys[randomIndex]
-    NCONFIG[selectedKey] = NCONFIG[selectedKey] - 1
-
-    res.status(200).json(NCONFIG)
-
-    for(let user of users) {
-        const tableMap = {
-            'N': 'new',
-            'L': 'learn',
-            'P': 'practice',
-            'K': 'known', 
-        }
-        
-        let uwList = await uwService.readUW(user._id)
-
-        if(uwList && uwList.length) {
-            uwList = JSON.parse(JSON.stringify(uwList))
-            let wArr = uwList.filter(x => x.table === tableMap[selectedKey])
-            if(!wArr.length) wArr = uwList
-
-            const wInx = Math.floor(Math.random() * wArr.length)
-            const word = wArr[wInx]
-            let sentence = ""
-            const sentences = word.wordId.sentences
-
-            if(sentences.length) {
-                let sInx = Math.floor(Math.random() * sentences.length)
-                sentence = sentences[sInx]
+    
+        let users = await us.getProUser()
+        users = users.filter(u => u.fcmToken)
+    
+        const nConf = { ...NCONFIG }
+    
+        for (let prop in nConf) {
+            if (nConf[prop] === 0) {
+                delete nConf[prop]
             }
-
-            // :TODO move word to table
+        }
+    
+        if(!NCONFIG['N'] && !NCONFIG['L'] && !NCONFIG['P'] && !NCONFIG['K']) {
+            NCONFIG = {
+                'N': 5, 'L': 3, 'P': 2, 'K': 1
+            }
+    
+            return res.send("RESET")
+        }
+    
+        const keys = Object.keys(nConf)
+        const randomIndex = Math.floor(Math.random() * keys.length)
+        const selectedKey = keys[randomIndex]
+        NCONFIG[selectedKey] = NCONFIG[selectedKey] - 1
+    
+        res.status(200).json(NCONFIG)
+    
+        console.log('NCONFIG: ', NCONFIG)
+        for(let user of users) {
+            const tableMap = {
+                'N': 'new',
+                'L': 'learn',
+                'P': 'practice',
+                'K': 'known', 
+            }
             
-            // send notification
-            const notificationData = {
-                "to": user.fcmToken,
-                "notification": {
-                    "body": sentence,
-                    "title": word.word,
-                    "subtitle": tableMap[selectedKey]
+            let uwList = await uwService.readUW(user._id)
+    
+            if(uwList && uwList.length) {
+                uwList = JSON.parse(JSON.stringify(uwList))
+                let wArr = uwList.filter(x => x.table === tableMap[selectedKey])
+                if(!wArr.length) wArr = uwList
+    
+                const wInx = Math.floor(Math.random() * wArr.length)
+                const word = wArr[wInx]
+                let sentence = ""
+                const sentences = word.wordId.sentences
+    
+                if(sentences.length) {
+                    let sInx = Math.floor(Math.random() * sentences.length)
+                    sentence = sentences[sInx]
                 }
-            }
-
-            await axios.post(
-                'https://fcm.googleapis.com/fcm/send', 
-                notificationData, 
-                {
-                    headers: {
-                        'Authorization': process.env.FCM_SERVER_KEY
+    
+                // update user_word
+                const uwpayload = {
+                    notified: word.notified + 1
+                }
+    
+                if(word.notified >= 10) uwpayload.table = function() {
+                    const tabs = ['new','learn','practice','known','master']
+                    const tabInx = tabs.indexOf(word.table)
+    
+                    return tabs[tabInx + 1]
+                }()
+    
+                console.log('uwpayload -> ', uwpayload)
+    
+                await uwService.updateUW(word._id, uwpayload)
+    
+                // send notification
+                const notificationData = {
+                    "to": user.fcmToken,
+                    "notification": {
+                        "body": sentence,
+                        "title": word.word,
+                        "subtitle": tableMap[selectedKey]
                     }
                 }
-            )
-        }
+    
+                console.log(notificationData)
+    
+                const notificationResult = await axios.post(
+                    'https://fcm.googleapis.com/fcm/send', 
+                    notificationData, 
+                    {
+                        headers: {
+                            'Authorization': process.env.FCM_SERVER_KEY
+                        }
+                    }
+                )
+    
+                console.log(notificationResult.data)
+            }
+        }   
+    } catch (error) {
+        console.log('[ERROR] > user/notification', error)
     }
 })
 
