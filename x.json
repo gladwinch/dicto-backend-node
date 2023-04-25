@@ -1,0 +1,45 @@
+{
+    "word": "nuance",
+    "simple-definition": "small difference between similar things",
+    "sentences": [
+        {
+            "sentence": "The nuance between angry and irritated reflects the intensity of emotions.",
+            "explanation": "In this example, the word nuance refers to the subtle difference between the two emotions angry and irritated. While both emotions indicate a level of displeasure, angry generally suggests a stronger and more intense feeling, whereas irritated implies a milder level of annoyance. The nuance here helps to understand the variation in the intensity of these emotions."
+        }
+    ],
+    "word": "abomination ",
+    "simple-definition": "something really bad or disliked",
+    "sentences": [
+        {
+            "sentence": "Stealing toys is an abomination because it makes others sad.",
+            "explanation": "In this sentence, "abomination" describes how bad the action of stealing toys is. Stealing toys is considered very wrong because it causes others to feel sad when they lose their belongings. The word "abomination" is used to emphasize how terrible and unacceptable this action is."
+        }
+    ],
+}
+
+{
+    {
+        "word": "abomination",
+        "etymology": {
+            "origin_date": "14th century",
+            "origin_language": "Middle English",
+            "derived_from": [
+                {
+                    "language": "Old French",
+                    "word": "abominacion",
+                    "meaning": "horror, repugnance, strong dislike"
+                },
+                {
+                    "language": "Latin",
+                    "word": "abominatio",
+                    "meaning": "abhorrence, detestation"
+                },
+                {
+                    "language": "Latin",
+                    "word": "abominari",
+                    "meaning": "to deprecate as an ill omen, shun, detest"
+                }
+            ]
+        }
+    }
+}

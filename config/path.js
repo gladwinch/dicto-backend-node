@@ -10,6 +10,19 @@ const fileNames = () => {
     })
 }
 
+function doesFileExist(filePath) {
+    try {
+      fs.accessSync(filePath, fs.constants.F_OK)
+      return true
+    } catch (error) {
+      return false
+    }
+}
+
+const ignoreValidation = [
+    'trainer'
+]
+
 exports.include = (router) => {
     const files = fileNames()
 
@@ -19,11 +32,18 @@ exports.include = (router) => {
         let fsValidationPath = path.join(__dirname, '..', 'modules', x, `${x}.validation.js`)
 
 		if(fs.existsSync(fsRouterPath)) {
-            router.use(
-                `/${x}`,
-                validationMiddleware(fsValidationPath), 
-                require(routerPath)
-            )
+            if(doesFileExist(fsValidationPath)) {
+                router.use(
+                    `/${x}`,
+                    validationMiddleware(fsValidationPath), 
+                    require(routerPath)
+                )
+            } else {
+                router.use(
+                    `/${x}`,
+                    require(routerPath)
+                )
+            }
         }
     }
 

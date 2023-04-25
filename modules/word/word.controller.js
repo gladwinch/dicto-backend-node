@@ -10,6 +10,7 @@ const { userService: us } = require('../user/index')
 // @route     GET /api/word
 // @access    Public
 router.get('/', search, async (req, res) => {
+    return res.status(200).json(null)
     const { search } = req.query
     let response = null
 
@@ -81,6 +82,9 @@ router.get('/', search, async (req, res) => {
     } else {
         word = await ws.createWord({
             word: search,
+            _meta: {
+                training: false
+            },
             ...data.data
         })
     }

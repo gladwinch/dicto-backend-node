@@ -1,0 +1,12 @@
+{ 
+    "prompt": w=nuance -sd -s", 
+    "completion": "
+        {
+            "word": "nuance",
+            "simple-definition": "",
+            "sentences": [
+                
+            ]
+        }
+    " 
+}

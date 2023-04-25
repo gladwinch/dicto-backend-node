@@ -8,6 +8,7 @@ const WordSchema = new mongoose.Schema({
         unique: true,
         required: [true, 'Please add a name']
     },
+    synopsis: String,
     opposites: {
         type: [String],
         default: []
@@ -17,12 +18,30 @@ const WordSchema = new mongoose.Schema({
         default: []
     },
     sentences: {
-        type: [String],
+        type: [
+            {
+                example: String,
+                explanation: String,
+                stage: {
+                    type: String,
+                    enum: [
+                        'easy',
+                        'medium',
+                        'difficult',
+                        'deficient'
+                    ],
+                    default: 'medium'
+                },
+                quality: {
+                    type: Number,
+                    default: 0
+                }
+            }
+        ],
         default: []
     },
     definitions: [
         {
-            simpleDefinition: String,
             definition: String,
             examples: [String],
             partOfSpeech: String,
@@ -30,10 +49,28 @@ const WordSchema = new mongoose.Schema({
                 type: String,
                 default: "general"
             },
-            priority: {
+            quality: {
                 type: Number,
                 default: 0
             }
+        }
+    ],
+    morpheme: [
+        {
+            morpheme: String,
+            type: {
+                type: String,
+                // enum: [
+                //     'root',
+                //     'prefix',
+                //     'suffix',
+                //     'inflectional-suffix',
+                //     'derivational-suffix',
+                //     'infix',
+                //     'circumfix'
+                // ]
+            },
+            meaning: String
         }
     ],
     phonetics: {
